@@ -1,26 +1,21 @@
 "use client"
 
-import type React from "react"
+import React from "react"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
-  Moon,
-  Sun,
-  Menu,
-  X,
   ArrowUp,
   Download,
   Mail,
-  ExternalLink,
-  Github,
+  Shield,
+  MessageCircle,
   Linkedin,
+  Github,
   MapPin,
   Code,
-  Shield,
-  Globe,
-  Users,
-  MessageCircle,
   Target,
+  Users,
+  Globe
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -28,45 +23,38 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
+import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight"
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect"
+import { Button as MovingButton } from "@/components/ui/moving-border"
+import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card"
+import { SparklesCore } from "@/components/ui/sparkles"
+import { TracingBeam } from "@/components/ui/tracing-beam"
+import { Navbar } from "@/components/Navbar"
+import { Footer } from "@/components/Footer"
+import Link from "next/link"
+import { CardStack } from "@/components/ui/card-stack"
 
 export default function AmanPortfolio() {
-  const [darkMode, setDarkMode] = useState(false)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showScrollTop, setShowScrollTop] = useState(false)
-  const [activeSection, setActiveSection] = useState("hero")
   const { toast } = useToast()
 
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400)
-
-      // Update active section based on scroll position
-      const sections = ["hero", "about", "skills", "projects", "experience", "contact"]
-      const current = sections.find((section) => {
-        const element = document.getElementById(section)
-        if (element) {
-          const rect = element.getBoundingClientRect()
-          return rect.top <= 100 && rect.bottom >= 100
-        }
-        return false
-      })
-      if (current) setActiveSection(current)
     }
-
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
     }
-    setIsMenuOpen(false)
-  }
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   const handleContactSubmit = (e: React.FormEvent) => {
@@ -77,185 +65,148 @@ export default function AmanPortfolio() {
     })
   }
 
-  const navItems = [
-    { id: "hero", label: "Home" },
-    { id: "about", label: "About" },
-    { id: "skills", label: "Skills" },
-    { id: "projects", label: "Projects" },
-    { id: "experience", label: "Experience" },
-    { id: "contact", label: "Contact" },
-  ]
-
   const skillCategories = {
     Programming: ["C", "Python", "Java", "HTML", "CSS", "JavaScript"],
     "Frameworks & Tools": ["React", "Next.js", "Git", "Tailwind CSS", "Express.js", "MongoDB"],
     Cybersecurity: ["Penetration Testing", "Vulnerability Analysis", "Nmap", "Wireshark", "Burp Suite"],
     "Soft Skills": ["Communication", "Problem-Solving", "Creativity", "Cooperation"],
     Languages: ["English", "Hindi"],
-  }
+  };
 
   const projects = [
     {
+      title: "Placement Notifier System",
+      description:
+        "A comprehensive placement management system designed to streamline the recruitment process. It features automated email notifications, Excel data parsing for bulk student uploads, and intelligent filtering based on CGPA and skills. Built with Next.js for a responsive frontend and FastAPI for high-performance backend processing.",
+      image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1000&auto=format&fit=crop",
+      tech: ["Next.js", "FastAPI", "TypeScript", "Python"],
+      github: "https://github.com/aman124598/placement_notifier.git",
+      live: "#",
+      featured: true,
+    },
+    {
       title: "Location Based Attendance System",
       description:
-        "Built a smart attendance solution that marks teachers present based on their proximity to campus using device geolocation and AI validation.",
-      image: "/placeholder.svg?height=300&width=400",
+        "An intelligent attendance tracking solution that leverages geolocation technology to verify teacher presence. The system uses AI-powered validation to ensure authenticity and provides real-time location-based check-ins, eliminating manual registers and reducing proxy attendance.",
+      image: "https://images.unsplash.com/photo-1576267423445-b2e0074d68a4?q=80&w=1000&auto=format&fit=crop",
       tech: ["React", "Express.js", "MongoDB", "Gemini API"],
-      github: "#",
+      github: "https://github.com/aman124598/attendence.git",
       live: "#",
       featured: true,
     },
     {
       title: "Water Delivery Ecommerce Platform",
       description:
-        "Developed a multi-vendor ecommerce platform for bottled water with a unique system to remove delivery fees by watching ads.",
-      image: "/placeholder.svg?height=300&width=400",
+        "A multi-vendor e-commerce platform revolutionizing water delivery. It features a unique ad-supported model allowing users to waive delivery fees. The platform supports real-time order tracking, vendor management, and a seamless checkout experience using Supabase for reliable data handling.",
+      image: "https://images.unsplash.com/photo-1543165796-5426273eaab3?q=80&w=1000&auto=format&fit=crop",
       tech: ["React", "Supabase"],
-      github: "#",
+      github: "https://github.com/aman124598/AquaFlow.git",
       live: "#",
       featured: true,
     },
-  ]
+  ];
+
+  const projectCards = projects.map((project, index) => ({
+    id: index,
+    content: (
+      <div className="flex flex-col h-full justify-between">
+        <div>
+            <img
+                src={project.image}
+                alt={project.title}
+                className="h-40 w-full object-cover rounded-xl mb-4"
+            />
+            <h3 className="font-bold text-lg text-neutral-800 dark:text-neutral-200 mb-2">
+                {project.title}
+            </h3>
+            <p className="text-neutral-600 dark:text-neutral-300 text-sm line-clamp-3">
+                {project.description}
+            </p>
+        </div>
+        <div className="mt-4">
+            <div className="flex flex-wrap gap-2 mb-4">
+                {project.tech.slice(0, 3).map(t => (
+                    <Badge key={t} variant="secondary" className="text-[10px] px-1 py-0">{t}</Badge>
+                ))}
+                {project.tech.length > 3 && <Badge variant="secondary" className="text-[10px] px-1 py-0">+{project.tech.length - 3}</Badge>}
+            </div>
+            <div className="flex justify-between items-center">
+                <a href={project.live} target="_blank" className="text-xs text-blue-500 hover:underline">Live Demo</a>
+                <a href={project.github} target="_blank" className="text-xs text-neutral-500 hover:text-neutral-800 dark:hover:text-white">View Code</a>
+            </div>
+        </div>
+      </div>
+    )
+  }))
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? "dark" : ""}`}>
-      <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
-        {/* Navigation */}
-        <nav className="fixed top-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-md z-50 border-b border-gray-200 dark:border-gray-700">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="font-playfair text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+      <Navbar />
+
+      {/* Hero Section */}
+      <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white dark:bg-black">
+        <div className="absolute inset-0 w-full h-full bg-white dark:bg-black bg-grid-black/[0.2] dark:bg-grid-white/[0.2]">
+            {/* Radial gradient for the container to give a faded look */}
+            <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+        </div>
+        <div className="absolute inset-0 w-full h-full">
+          <SparklesCore
+            id="tsparticlesfullpage"
+            background="transparent"
+            minSize={1}
+            maxSize={3}
+            particleDensity={50}
+            className="w-full h-full"
+            particleColor="#888888"
+            speed={2}
+          />
+        </div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.h1
+            initial={{
+              opacity: 0,
+              y: 20,
+            }}
+            animate={{
+              opacity: 1,
+              y: [20, -5, 0],
+            }}
+            transition={{
+              duration: 0.5,
+              ease: [0.4, 0.0, 0.2, 1],
+            }}
+            className="text-4xl md:text-6xl lg:text-7xl font-bold text-neutral-700 dark:text-white max-w-4xl leading-relaxed lg:leading-snug mx-auto mb-8"
+          >
+            Hi, I'm <span className="font-calistoga text-blue-600 dark:text-blue-400">AMAN</span> <br />
+            <span className="text-2xl md:text-4xl lg:text-5xl block mt-2">
+              Web Developer & Cybersecurity Enthusiast
+            </span>
+          </motion.h1>
+          
+          <motion.div
+              className="flex flex-col sm:flex-row gap-4 justify-center mt-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              <MovingButton
+                borderRadius="1.75rem"
+                className="bg-white dark:bg-slate-900 text-black dark:text-white border-neutral-200 dark:border-slate-800"
+                onClick={() => window.open("/resume.pdf", "_blank")}
               >
-                AMAN
-              </motion.div>
-
-              {/* Desktop Navigation */}
-              <div className="hidden md:flex space-x-8">
-                {navItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    className={`text-sm font-medium transition-colors hover:text-blue-600 dark:hover:text-blue-400 ${
-                      activeSection === item.id ? "text-blue-600 dark:text-blue-400" : ""
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-
-              <div className="flex items-center space-x-4">
-                <Button variant="ghost" size="icon" onClick={() => setDarkMode(!darkMode)} className="rounded-full">
-                  {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                </Button>
-
-                {/* Mobile menu button */}
-                <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                  {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile Navigation */}
-          <AnimatePresence>
-            {isMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700"
-              >
-                <div className="px-4 py-2 space-y-1">
-                  {navItems.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => scrollToSection(item.id)}
-                      className="block w-full text-left px-3 py-2 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </nav>
-
-        {/* Hero Section */}
-        <section
-          id="hero"
-          className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900/20 dark:to-purple-900/20 relative overflow-hidden"
-        >
-          {/* Animated background particles */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
-          </div>
-
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <motion.h1
-                className="font-playfair text-5xl md:text-7xl font-bold mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-              >
-                Hi, I'm{" "}
-                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">AMAN</span>
-              </motion.h1>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="mb-6"
-              >
-                <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-2">
-                  Web Developer | Cybersecurity Enthusiast
-                </p>
-                <div className="flex items-center justify-center gap-2 text-lg text-gray-500 dark:text-gray-400">
-                  <Code className="h-5 w-5" />
-                  <span>+</span>
-                  <Shield className="h-5 w-5" />
-                </div>
-              </motion.div>
-
-              <motion.p
-                className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-              >
-                I build full-stack applications and love breaking down systems to make them safer. Currently pursuing
-                Computer Science with a passion for creating secure, innovative solutions.
-              </motion.p>
-
-              <motion.div
-                className="flex flex-col sm:flex-row gap-4 justify-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-              >
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                >
-                  <Download className="mr-2 h-5 w-5" />
-                  Download Resume
-                </Button>
-                <Button size="lg" variant="outline" onClick={() => scrollToSection("contact")}>
-                  <Mail className="mr-2 h-5 w-5" />
-                  Contact Me
-                </Button>
-              </motion.div>
+                <Download className="mr-2 h-5 w-5" />
+                Resume
+              </MovingButton>
+              <Button size="lg" variant="outline" onClick={() => scrollToSection("contact")} className="h-16 w-40 rounded-[1.75rem]">
+                <Mail className="mr-2 h-5 w-5" />
+                Contact Me
+              </Button>
             </motion.div>
-          </div>
-        </section>
+        </div>
+      </section>
 
+      <TracingBeam className="px-6">
         {/* About Section */}
         <section id="about" className="py-20 bg-white dark:bg-gray-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -267,9 +218,7 @@ export default function AmanPortfolio() {
               className="text-center mb-16"
             >
               <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4">About Me</h2>
-              <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                Passionate about technology, security, and building meaningful solutions
-              </p>
+              <TextGenerateEffect words="Passionate about technology, security, and building meaningful solutions" className="text-center text-gray-600 dark:text-gray-300 max-w-2xl mx-auto" />
             </motion.div>
 
             <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -283,7 +232,7 @@ export default function AmanPortfolio() {
                 <div className="w-64 h-64 mx-auto md:mx-0 mb-8 rounded-full overflow-hidden bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 p-1">
                   <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-gray-800">
                     <img
-                      src="/placeholder.svg?height=256&width=256"
+                      src="/profile.png"
                       alt="AMAN"
                       className="w-full h-full object-cover"
                     />
@@ -298,13 +247,13 @@ export default function AmanPortfolio() {
                 viewport={{ once: true }}
                 className="space-y-6"
               >
-                <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed text-justify">
                   I'm a Computer Science undergraduate based in Bangalore. I enjoy crafting real-world full-stack
                   applications with React, Express, and MongoDB—and I'm equally passionate about cybersecurity, ethical
                   hacking, and securing digital systems.
                 </p>
 
-                <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed text-justify">
                   My journey combines the creativity of web development with the analytical mindset of cybersecurity,
                   allowing me to build applications that are not just functional, but also secure and robust.
                 </p>
@@ -323,8 +272,8 @@ export default function AmanPortfolio() {
                     <span className="text-sm">Cybersecurity Intern @ CFSS</span>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                    <Mail className="h-5 w-5 text-red-600 dark:text-red-400" />
-                    <span className="text-sm">amanraj89969@gmail.com</span>
+                    <Mail className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0" />
+                    <span className="text-sm break-all">amanraj89969@gmail.com</span>
                   </div>
                 </div>
               </motion.div>
@@ -402,53 +351,8 @@ export default function AmanPortfolio() {
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              {projects.map((project, index) => (
-                <motion.div
-                  key={project.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.2 }}
-                  viewport={{ once: true }}
-                >
-                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group">
-                    <div className="aspect-video overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20">
-                      <img
-                        src={project.image || "/placeholder.svg"}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                    <CardContent className="p-6">
-                      <h3 className="font-semibold text-xl mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                        {project.title}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">{project.description}</p>
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {project.tech.map((tech) => (
-                          <Badge key={tech} variant="outline" className="text-xs">
-                            {tech}
-                          </Badge>
-                        ))}
-                      </div>
-                      <div className="flex gap-3">
-                        <Button size="sm" variant="outline" asChild className="flex-1">
-                          <a href={project.github} target="_blank" rel="noopener noreferrer">
-                            <Github className="mr-2 h-4 w-4" />
-                            View Code
-                          </a>
-                        </Button>
-                        <Button size="sm" asChild className="flex-1">
-                          <a href={project.live} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="mr-2 h-4 w-4" />
-                            Live Demo
-                          </a>
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
+            <div className="flex items-center justify-center w-full h-full py-10">
+                <CardStack items={projectCards} />
             </div>
           </div>
         </section>
@@ -516,8 +420,30 @@ export default function AmanPortfolio() {
           </div>
         </section>
 
+        {/* Blog Preview Section */}
+        <section id="thoughts" className="py-20 bg-white dark:bg-gray-900">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4">Thoughts & Notes</h2>
+              <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
+                I write about web development, cybersecurity, and my learning journey.
+              </p>
+              <Link href="/blog">
+                <Button size="lg" className="rounded-full">
+                    Read My Blog
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </section>
+
         {/* Contact Section */}
-        <section id="contact" className="py-20 bg-white dark:bg-gray-900">
+        <section id="contact" className="py-20 bg-gray-50 dark:bg-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -528,7 +454,7 @@ export default function AmanPortfolio() {
             >
               <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4">Get In Touch</h2>
               <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                Let's discuss opportunities, projects, or just connect over our shared interests in tech and security
+                Have a project in mind or want to discuss cybersecurity? Let's connect!
               </p>
             </motion.div>
 
@@ -540,35 +466,35 @@ export default function AmanPortfolio() {
                 viewport={{ once: true }}
               >
                 <Card>
-                  <CardContent className="p-6">
+                  <CardContent className="p-8">
                     <form onSubmit={handleContactSubmit} className="space-y-6">
-                      <div>
-                        <label htmlFor="name" className="block text-sm font-medium mb-2">
-                          Name
-                        </label>
-                        <Input id="name" placeholder="Your name" required />
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label htmlFor="name" className="text-sm font-medium">
+                            Name
+                          </label>
+                          <Input id="name" placeholder="John Doe" required />
+                        </div>
+                        <div className="space-y-2">
+                          <label htmlFor="email" className="text-sm font-medium">
+                            Email
+                          </label>
+                          <Input id="email" type="email" placeholder="john@example.com" required />
+                        </div>
                       </div>
-                      <div>
-                        <label htmlFor="email" className="block text-sm font-medium mb-2">
-                          Email
+                      <div className="space-y-2">
+                        <label htmlFor="subject" className="text-sm font-medium">
+                          Subject
                         </label>
-                        <Input id="email" type="email" placeholder="your.email@example.com" required />
+                        <Input id="subject" placeholder="Project Inquiry" required />
                       </div>
-                      <div>
-                        <label htmlFor="message" className="block text-sm font-medium mb-2">
+                      <div className="space-y-2">
+                        <label htmlFor="message" className="text-sm font-medium">
                           Message
                         </label>
-                        <Textarea
-                          id="message"
-                          placeholder="Tell me about your project or just say hi..."
-                          rows={5}
-                          required
-                        />
+                        <Textarea id="message" placeholder="Tell me about your project..." className="min-h-[150px]" required />
                       </div>
-                      <Button
-                        type="submit"
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                      >
+                      <Button type="submit" className="w-full">
                         Send Message
                       </Button>
                     </form>
@@ -583,8 +509,11 @@ export default function AmanPortfolio() {
                 viewport={{ once: true }}
                 className="space-y-8"
               >
-                <div>
-                  <h3 className="font-semibold text-xl mb-6">Let's Connect</h3>
+                <div className="space-y-6">
+                  <h3 className="text-2xl font-bold font-playfair">Contact Information</h3>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    I'm currently available for freelance work and internship opportunities.
+                  </p>
 
                   <div className="space-y-4">
                     <a
@@ -631,56 +560,24 @@ export default function AmanPortfolio() {
             </div>
           </div>
         </section>
+      </TracingBeam>
 
-        {/* Footer */}
-        <footer className="bg-gray-900 dark:bg-black text-white py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <div className="font-playfair text-2xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                AMAN
-              </div>
-              <p className="text-gray-400 mb-6">© 2025 AMAN – Built with ❤️ using React & Tailwind CSS</p>
-              <div className="flex justify-center space-x-6 mb-6">
-                <a
-                  href="mailto:amanraj89969@gmail.com"
-                  className="text-gray-400 hover:text-white transition-colors"
-                  aria-label="Email"
-                >
-                  <Mail className="h-6 w-6" />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/aman-83169b204/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin className="h-6 w-6" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors" aria-label="GitHub">
-                  <Github className="h-6 w-6" />
-                </a>
-              </div>
-              <p className="text-gray-500 text-sm">Web Developer • Cybersecurity Enthusiast • Problem Solver</p>
-            </div>
-          </div>
-        </footer>
+      <Footer />
 
-        {/* Scroll to Top Button */}
-        <AnimatePresence>
-          {showScrollTop && (
-            <motion.button
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0 }}
-              onClick={scrollToTop}
-              className="fixed bottom-8 right-8 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-3 rounded-full shadow-lg z-50 transition-all duration-300"
-            >
-              <ArrowUp className="h-6 w-6" />
-            </motion.button>
-          )}
-        </AnimatePresence>
-      </div>
+      {/* Scroll to Top Button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            onClick={scrollToTop}
+            className="fixed bottom-8 right-8 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-3 rounded-full shadow-lg z-50 transition-all duration-300"
+          >
+            <ArrowUp className="h-6 w-6" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
-  )
+  );
 }

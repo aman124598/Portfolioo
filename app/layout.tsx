@@ -1,17 +1,24 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Playfair_Display } from "next/font/google"
+import { Outfit, Playfair_Display, Calistoga } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "@/components/ui/toaster"
+import { ThemeProvider } from "@/components/theme-provider"
 
-const inter = Inter({
+const outfit = Outfit({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-outfit",
 })
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
+})
+
+const calistoga = Calistoga({
+  subsets: ["latin"],
+  variable: "--font-calistoga",
+  weight: ["400"],
 })
 
 export const metadata: Metadata = {
@@ -35,10 +42,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body className={inter.className}>
-        {children}
-        <Toaster />
+    <html lang="en" className={`${outfit.variable} ${playfair.variable} ${calistoga.variable}`} suppressHydrationWarning>
+      <body className={outfit.className}>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )
