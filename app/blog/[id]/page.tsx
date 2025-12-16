@@ -4,21 +4,21 @@ import { notFound } from "next/navigation"
 import BlogPostClient from "./BlogPostClient"
 
 export async function generateStaticParams() {
-  const blogs = getPublishedBlogs()
+  const blogs = await getPublishedBlogs()
   return blogs.map((blog) => ({
     id: blog.slug,
   }))
 }
 
-export default function BlogPostPage({ params }: { params: { id: string } }) {
-  const blog = getBlogBySlug(params.id)
+export default async function BlogPostPage({ params }: { params: { id: string } }) {
+  const blog = await getBlogBySlug(params.id)
 
   if (!blog) {
     notFound()
   }
 
   // Get related posts (same tags, exclude current)
-  const allBlogs = getPublishedBlogs()
+  const allBlogs = await getPublishedBlogs()
   const relatedPosts = allBlogs
     .filter(b => b.id !== blog.id && b.tags.some(tag => blog.tags.includes(tag)))
     .slice(0, 3)
