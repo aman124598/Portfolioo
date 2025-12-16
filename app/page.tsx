@@ -2,6 +2,10 @@ import React from "react"
 import { getProjects, getExperiences } from "@/lib/portfolio-data"
 import PortfolioClient from "./PortfolioClient"
 
+// Force dynamic rendering to always fetch fresh data
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function AmanPortfolio() {
   // Fetch projects from admin panel data
   const adminProjects = await getProjects();
