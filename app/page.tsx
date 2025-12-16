@@ -15,13 +15,12 @@ import {
   Code,
   Target,
   Users,
-  Globe
+  Globe,
+  Twitter
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight"
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect"
@@ -55,14 +54,6 @@ export default function AmanPortfolio() {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
     }
-  }
-
-  const handleContactSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    toast({
-      title: "Message sent!",
-      description: "Thank you for reaching out. I'll get back to you soon!",
-    })
   }
 
   const skillCategories = {
@@ -130,8 +121,7 @@ export default function AmanPortfolio() {
                 ))}
                 {project.tech.length > 3 && <Badge variant="secondary" className="text-[10px] px-1 py-0">+{project.tech.length - 3}</Badge>}
             </div>
-            <div className="flex justify-between items-center">
-                <a href={project.live} target="_blank" className="text-xs text-blue-500 hover:underline">Live Demo</a>
+            <div className="flex justify-end items-center">
                 <a href={project.github} target="_blank" className="text-xs text-neutral-500 hover:text-neutral-800 dark:hover:text-white">View Code</a>
             </div>
         </div>
@@ -458,74 +448,33 @@ export default function AmanPortfolio() {
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 gap-12">
+            <div className="max-w-md mx-auto">
               <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-              >
-                <Card>
-                  <CardContent className="p-8">
-                    <form onSubmit={handleContactSubmit} className="space-y-6">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label htmlFor="name" className="text-sm font-medium">
-                            Name
-                          </label>
-                          <Input id="name" placeholder="John Doe" required />
-                        </div>
-                        <div className="space-y-2">
-                          <label htmlFor="email" className="text-sm font-medium">
-                            Email
-                          </label>
-                          <Input id="email" type="email" placeholder="john@example.com" required />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="subject" className="text-sm font-medium">
-                          Subject
-                        </label>
-                        <Input id="subject" placeholder="Project Inquiry" required />
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="message" className="text-sm font-medium">
-                          Message
-                        </label>
-                        <Textarea id="message" placeholder="Tell me about your project..." className="min-h-[150px]" required />
-                      </div>
-                      <Button type="submit" className="w-full">
-                        Send Message
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
                 className="space-y-8"
               >
                 <div className="space-y-6">
-                  <h3 className="text-2xl font-bold font-playfair">Contact Information</h3>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    I'm currently available for freelance work and internship opportunities.
+                  <h3 className="text-2xl font-bold font-playfair text-center">Connect With Me</h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-center">
+                    Let's connect on social media!
                   </p>
 
                   <div className="space-y-4">
                     <a
-                      href="mailto:amanraj89969@gmail.com"
+                      href="https://x.com/Stranzerzz"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
                     >
-                      <div className="w-10 h-10 bg-red-100 dark:bg-red-900/20 rounded-lg flex items-center justify-center group-hover:bg-red-200 dark:group-hover:bg-red-900/40 transition-colors">
-                        <Mail className="h-5 w-5 text-red-600 dark:text-red-400" />
+                      <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/40 transition-colors">
+                        <Twitter className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                       </div>
                       <div>
-                        <p className="font-medium">Email</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">amanraj89969@gmail.com</p>
+                        <p className="font-medium">Twitter</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">Follow me</p>
                       </div>
                     </a>
 
@@ -552,8 +501,8 @@ export default function AmanPortfolio() {
                     Quick Response
                   </h4>
                   <p className="text-sm text-gray-600 dark:text-gray-300">
-                    I typically respond to emails within 24 hours. For urgent matters or collaboration opportunities,
-                    feel free to reach out on LinkedIn.
+                    For urgent matters or collaboration opportunities,
+                    feel free to reach out on LinkedIn or Twitter.
                   </p>
                 </div>
               </motion.div>
