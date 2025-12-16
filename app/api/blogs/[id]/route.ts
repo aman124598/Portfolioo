@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/auth';
-import { getBlogById, updateBlog, deleteBlog } from '@/lib/data';
+import { getBlogById, updateBlog, deleteBlog } from '@/lib/db';
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    const blog = getBlogById(params.id);
+    const blog = await getBlogById(params.id);
     if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
@@ -31,7 +31,7 @@ export async function PUT(
 
   try {
     const data = await request.json();
-    const blog = updateBlog(params.id, data);
+    const blog = await updateBlog(params.id, data);
     if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
@@ -54,7 +54,7 @@ export async function DELETE(
   }
 
   try {
-    const success = deleteBlog(params.id);
+    const success = await deleteBlog(params.id);
     if (!success) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
