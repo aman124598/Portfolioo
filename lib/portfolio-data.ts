@@ -1,116 +1,70 @@
-import fs from 'fs';
-import path from 'path';
+import { getProjects as dbGetProjects, getBlogs as dbGetBlogs, getExperiences as dbGetExperiences } from './db';
+import type { Project, Blog, Experience } from './db';
 
-const dataDir = path.join(process.cwd(), 'data');
-
-export interface Project {
-  id: string;
-  title: string;
-  description: string;
-  technologies: string[];
-  imageUrl?: string;
-  liveUrl?: string;
-  githubUrl?: string;
-  featured: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Blog {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  author: string;
-  tags: string[];
-  coverImage?: string;
-  published: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Experience {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  startDate: string;
-  endDate: string;
-  current: boolean;
-  description: string;
-  responsibilities: string[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-// Helper function to safely read JSON files
-function safeReadJson<T>(filePath: string, defaultValue: T): T {
-  try {
-    if (fs.existsSync(filePath)) {
-      const data = fs.readFileSync(filePath, 'utf-8');
-      return JSON.parse(data);
-    }
-  } catch (error) {
-    console.error(`Error reading ${filePath}:`, error);
-  }
-  return defaultValue;
-}
+export type { Project, Blog, Experience };
 
 // Project functions
-export function getProjects(): Project[] {
-  const projectsFile = path.join(dataDir, 'projects.json');
-  return safeReadJson<Project[]>(projectsFile, []);
+export async function getProjects(): Promise<Project[]> {
+  try {
+    return await dbGetProjects();
+  } catch {
+    return [];
+  }
 }
 
-export function getFeaturedProjects(): Project[] {
-  return getProjects().filter(p => p.featured);
+export async function getFeaturedProjects(): Promise<Project[]> {
+  const projects = await getProjects();
+  return projects.filter(p => p.featured);
 }
 
-export function getProjectById(id: string): Project | undefined {
-  return getProjects().find(p => p.id === id);
+export async function getProjectById(id: string): Promise<Project | undefined> {
+  const projects = await getProjects();
+  return projects.find(p => p.id === id);
 }
 
 // Blog functions
-export function getBlogs(): Blog[] {
-  const blogsFile = path.join(dataDir, 'blogs.json');
-  return safeReadJson<Blog[]>(blogsFile, []);
+export async function getBlogs(): Promise<Blog[]> {
+  try {
+    return await dbGetBlogs();
+  } catch {
+    return [];
+  }
 }
 
-export function getPublishedBlogs(): Blog[] {
-  return getBlogs()
+export async function getPublishedBlogs(): Promise<Blog[]> {
+  const blogs = await getBlogs();
+  return blogs
     .filter(b => b.published)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
-export function getBlogById(id: string): Blog | undefined {
-  return getBlogs().find(b => b.id === id);
+export async function getBlogById(id: string): Promise<Blog | undefined> {
+  const blogs = await getBlogs();
+  return blogs.find(b => b.id === id);
 }
 
-export function getBlogBySlug(slug: string): Blog | undefined {
-  return getBlogs().find(b => b.slug === slug && b.published);
+export async function getBlogBySlug(slug: string): Promise<Blog | undefined> {
+  const blogs = await getBlogs();
+  return blogs.find(b => b.slug === slug && b.published);
 }
 
-export function getBlogsByTag(tag: string): Blog[] {
-  return getPublishedBlogs().filter(b => 
+export async function getBlogsByTag(tag: string): Promise<Blog[]> {
+  const published = await getPublishedBlogs();
+  return published.filter(b => 
     b.tags.some(t => t.toLowerCase() === tag.toLowerCase())
   );
 }
 
 // Experience functions
-export function getExperiences(): Experience[] {
-  const experiencesFile = path.join(dataDir, 'experiences.json');
-  return safeReadJson<Experience[]>(experiencesFile, [])
-    .sort((a, b) => {
-      // Sort by current first, then by start date (latest first)
-      if (a.current && !b.current) return -1;
-      if (!a.current && b.current) return 1;
-      return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
-    });
+export async function getExperiences(): Promise<Experience[]> {
+  try {
+    return await dbGetExperiences();
+  } catch {
+    return [];
+  }
 }
 
-export function getExperienceById(id: string): Experience | undefined {
-  const experiencesFile = path.join(dataDir, 'experiences.json');
-  const experiences = safeReadJson<Experience[]>(experiencesFile, []);
+export async function getExperienceById(id: string): Promise<Experience | undefined> {
+  const experiences = await getExperiences();
   return experiences.find(e => e.id === id);
 }

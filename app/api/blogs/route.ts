@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/auth';
-import { getBlogs, createBlog } from '@/lib/data';
+import { getBlogs, createBlog } from '@/lib/db';
 
 export async function GET() {
   try {
-    const blogs = getBlogs();
+    const blogs = await getBlogs();
     return NextResponse.json(blogs);
   } catch (error) {
+    console.error('Get blogs error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch blogs' },
       { status: 500 }
@@ -22,9 +23,10 @@ export async function POST(request: Request) {
 
   try {
     const data = await request.json();
-    const blog = createBlog(data);
+    const blog = await createBlog(data);
     return NextResponse.json(blog, { status: 201 });
   } catch (error) {
+    console.error('Create blog error:', error);
     return NextResponse.json(
       { error: 'Failed to create blog' },
       { status: 500 }

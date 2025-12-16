@@ -2,12 +2,12 @@ import React from "react"
 import { getProjects, getExperiences } from "@/lib/portfolio-data"
 import PortfolioClient from "./PortfolioClient"
 
-export default function AmanPortfolio() {
+export default async function AmanPortfolio() {
   // Fetch projects from admin panel data
-  const adminProjects = getProjects();
+  const adminProjects = await getProjects();
   
   // Fetch experiences from admin panel data
-  const adminExperiences = getExperiences();
+  const adminExperiences = await getExperiences();
 
   // Static fallback projects (your original projects)
   const staticProjects = [

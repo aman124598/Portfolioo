@@ -1,33 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const dataDir = path.join(process.cwd(), 'data');
-const experiencesFile = path.join(dataDir, 'experiences.json');
-
-// Ensure data directory and file exist
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
-}
-if (!fs.existsSync(experiencesFile)) {
-  fs.writeFileSync(experiencesFile, '[]');
-}
+import { getExperiences, createExperience, updateExperience, deleteExperience } from '@/lib/db';
 
 // GET all experiences
 export async function GET() {
   try {
-    const data = fs.readFileSync(experiencesFile, 'utf-8');
-    const experiences = JSON.parse(data);
-    
-    // Sort by current first, then by start date (latest first)
-    experiences.sort((a: any, b: any) => {
-      if (a.current && !b.current) return -1;
-      if (!a.current && b.current) return 1;
-      return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
-    });
-    
+    const experiences = await getExperiences();
     return NextResponse.json(experiences);
   } catch (error) {
+    console.error('Get experiences error:', error);
     return NextResponse.json({ error: 'Failed to read experiences' }, { status: 500 });
   }
 }
@@ -36,21 +16,10 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const data = fs.readFileSync(experiencesFile, 'utf-8');
-    const experiences = JSON.parse(data);
-
-    const newExperience = {
-      ...body,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    experiences.push(newExperience);
-    fs.writeFileSync(experiencesFile, JSON.stringify(experiences, null, 2));
-
+    const newExperience = await createExperience(body);
     return NextResponse.json(newExperience, { status: 201 });
   } catch (error) {
+    console.error('Create experience error:', error);
     return NextResponse.json({ error: 'Failed to create experience' }, { status: 500 });
   }
 }
@@ -59,23 +28,15 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const data = fs.readFileSync(experiencesFile, 'utf-8');
-    const experiences = JSON.parse(data);
-
-    const index = experiences.findIndex((e: any) => e.id === body.id);
-    if (index === -1) {
+    const experience = await updateExperience(body.id, body);
+    
+    if (!experience) {
       return NextResponse.json({ error: 'Experience not found' }, { status: 404 });
     }
-
-    experiences[index] = {
-      ...experiences[index],
-      ...body,
-      updatedAt: new Date().toISOString(),
-    };
-
-    fs.writeFileSync(experiencesFile, JSON.stringify(experiences, null, 2));
-    return NextResponse.json(experiences[index]);
+    
+    return NextResponse.json(experience);
   } catch (error) {
+    console.error('Update experience error:', error);
     return NextResponse.json({ error: 'Failed to update experience' }, { status: 500 });
   }
 }
@@ -90,18 +51,15 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
 
-    const data = fs.readFileSync(experiencesFile, 'utf-8');
-    const experiences = JSON.parse(data);
+    const success = await deleteExperience(id);
 
-    const filteredExperiences = experiences.filter((e: any) => e.id !== id);
-
-    if (filteredExperiences.length === experiences.length) {
+    if (!success) {
       return NextResponse.json({ error: 'Experience not found' }, { status: 404 });
     }
 
-    fs.writeFileSync(experiencesFile, JSON.stringify(filteredExperiences, null, 2));
-    return NextResponse.json({ message: 'Experience deleted successfully' });
+    return NextResponse.json({ success: true });
   } catch (error) {
+    console.error('Delete experience error:', error);
     return NextResponse.json({ error: 'Failed to delete experience' }, { status: 500 });
   }
 }
