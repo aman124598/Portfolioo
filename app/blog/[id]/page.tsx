@@ -3,6 +3,10 @@ import { getBlogBySlug, getPublishedBlogs } from "@/lib/portfolio-data"
 import { notFound } from "next/navigation"
 import BlogPostClient from "./BlogPostClient"
 
+// Force dynamic rendering to always fetch fresh data
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export async function generateStaticParams() {
   const blogs = await getPublishedBlogs()
   return blogs.map((blog) => ({
