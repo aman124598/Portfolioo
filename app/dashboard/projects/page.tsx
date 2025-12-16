@@ -1,9 +1,9 @@
-import { getProjects } from '@/lib/data';
+import { getProjects } from '@/lib/db';
 import Link from 'next/link';
 import DeleteButton from '@/components/DeleteButton';
 
-export default function ProjectsPage() {
-  const projects = getProjects();
+export default async function ProjectsPage() {
+  const projects = await getProjects();
 
   return (
     <div>

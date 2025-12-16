@@ -1,9 +1,9 @@
-import { getBlogs } from '@/lib/data';
+import { getBlogs } from '@/lib/db';
 import Link from 'next/link';
 import DeleteButton from '@/components/DeleteButton';
 
-export default function BlogsPage() {
-  const blogs = getBlogs();
+export default async function BlogsPage() {
+  const blogs = await getBlogs();
 
   return (
     <div>
