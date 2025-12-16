@@ -30,7 +30,7 @@ export function Footer() {
               <Github className="h-6 w-6" />
             </a>
           </div>
-          <p className="text-gray-500 text-sm">Web Developer • Cybersecurity Enthusiast • Problem Solver</p>
+          <p className="text-gray-500 text-sm">Full Stack Developer • Cybersecurity Enthusiast • Problem Solver</p>
         </div>
       </div>
     </footer>

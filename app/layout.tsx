@@ -22,14 +22,14 @@ const calistoga = Calistoga({
 })
 
 export const metadata: Metadata = {
-  title: "AMAN - Web Developer & Cybersecurity Enthusiast",
+  title: "AMAN - Full Stack Developer & Cybersecurity Enthusiast",
   description:
     "Portfolio of AMAN, a Computer Science undergraduate passionate about web development and cybersecurity. Specializing in React, full-stack development, and ethical hacking.",
   keywords:
-    "web developer, cybersecurity, react developer, full-stack developer, ethical hacking, computer science, bangalore",
+    "full stack developer, cybersecurity, react developer, next.js developer, ethical hacking, computer science, bangalore",
   authors: [{ name: "AMAN" }],
   openGraph: {
-    title: "AMAN - Web Developer & Cybersecurity Enthusiast",
+    title: "AMAN - Full Stack Developer & Cybersecurity Enthusiast",
     description: "Building secure, innovative web applications and exploring cybersecurity",
     type: "website",
   },

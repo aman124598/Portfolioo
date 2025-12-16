@@ -156,7 +156,7 @@ export default function PortfolioClient({ projects, experiences }: { projects: P
           >
             Hi, I'm <span className="font-calistoga text-blue-600 dark:text-blue-400">AMAN</span> <br />
             <span className="text-2xl md:text-4xl lg:text-5xl block mt-2">
-              Web Developer & Cybersecurity Enthusiast
+              Full Stack Developer & Cybersecurity Enthusiast
             </span>
           </motion.h1>
           
