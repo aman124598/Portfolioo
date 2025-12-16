@@ -1,0 +1,19 @@
+[
+  {
+    "title": "Cybersecurity Intern",
+    "company": "CFSS Cyber and Forensics Security Solutions",
+    "location": "Bangalore",
+    "startDate": "2024-03",
+    "endDate": "2024-04",
+    "current": false,
+    "description": "Internship focused on cybersecurity and penetration testing",
+    "responsibilities": [
+      "Performed vulnerability testing with tools like Nmap, Wireshark, and Burp Suite",
+      "Practiced ethical hacking and security assessment methodologies in real-world environments",
+      "Gained hands-on experience with penetration testing frameworks and security protocols"
+    ],
+    "id": "1765883800000",
+    "createdAt": "2024-03-01T00:00:00.000Z",
+    "updatedAt": "2024-03-01T00:00:00.000Z"
+  }
+]
