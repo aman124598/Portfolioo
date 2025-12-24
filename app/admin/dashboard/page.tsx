@@ -1,14 +1,18 @@
-import { getProjects, getBlogs } from '@/lib/data';
+import { getProjects, getBlogs } from '@/lib/db';
 import { getExperiences } from '@/lib/portfolio-data';
 import StatsCard from '@/components/StatsCard';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 
-export default function DashboardPage() {
-  const projects = getProjects();
-  const blogs = getBlogs();
-  const experiences = getExperiences();
+// Force dynamic rendering to always fetch fresh data
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export default async function DashboardPage() {
+  const projects = await getProjects();
+  const blogs = await getBlogs();
+  const experiences = await getExperiences();
   const publishedBlogs = blogs.filter(b => b.published);
   const featuredProjects = projects.filter(p => p.featured);
   const currentExperiences = experiences.filter(e => e.current);

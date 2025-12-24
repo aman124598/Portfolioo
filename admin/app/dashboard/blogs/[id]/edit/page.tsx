@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState, use } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 
 interface BlogFormData {
   title: string;
@@ -14,8 +14,9 @@ interface BlogFormData {
   published: boolean;
 }
 
-export default function EditBlogPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function EditBlogPage() {
+  const params = useParams();
+  const id = params.id as string;
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -31,6 +32,8 @@ export default function EditBlogPage({ params }: { params: Promise<{ id: string 
   });
 
   useEffect(() => {
+    if (!id) return;
+    
     fetch(`/api/blogs/${id}`)
       .then(res => {
         if (!res.ok) {

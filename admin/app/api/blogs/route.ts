@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/auth';
-import { getBlogs, createBlog } from '@/lib/data';
+import { getBlogsAsync, createBlog } from '@/lib/data';
 
 export async function GET() {
   try {
-    const blogs = getBlogs();
+    const blogs = await getBlogsAsync();
     return NextResponse.json(blogs);
   } catch (error) {
     return NextResponse.json(
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
   try {
     const data = await request.json();
-    const blog = createBlog(data);
+    const blog = await createBlog(data);
     return NextResponse.json(blog, { status: 201 });
   } catch (error) {
     return NextResponse.json(
@@ -31,3 +31,4 @@ export async function POST(request: Request) {
     );
   }
 }
+

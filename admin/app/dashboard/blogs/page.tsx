@@ -1,9 +1,13 @@
-import { getBlogs } from '@/lib/data';
+import { getBlogsAsync } from '@/lib/data';
 import Link from 'next/link';
 import DeleteButton from '@/components/DeleteButton';
 
-export default function BlogsPage() {
-  const blogs = getBlogs();
+// Force dynamic rendering to always fetch fresh data
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export default async function BlogsPage() {
+  const blogs = await getBlogsAsync();
 
   return (
     <div>

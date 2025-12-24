@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/auth';
-import { getProjects, createProject } from '@/lib/data';
+import { getProjectsAsync, createProject } from '@/lib/data';
 
 export async function GET() {
   try {
-    const projects = getProjects();
+    const projects = await getProjectsAsync();
     return NextResponse.json(projects);
   } catch (error) {
     return NextResponse.json(
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
   try {
     const data = await request.json();
-    const project = createProject(data);
+    const project = await createProject(data);
     return NextResponse.json(project, { status: 201 });
   } catch (error) {
     return NextResponse.json(
@@ -31,3 +31,4 @@ export async function POST(request: Request) {
     );
   }
 }
+

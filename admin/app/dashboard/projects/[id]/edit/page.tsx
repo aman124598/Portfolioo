@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState, use } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 
 interface ProjectFormData {
   title: string;
@@ -13,8 +13,9 @@ interface ProjectFormData {
   featured: boolean;
 }
 
-export default function EditProjectPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function EditProjectPage() {
+  const params = useParams();
+  const id = params.id as string;
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -29,6 +30,8 @@ export default function EditProjectPage({ params }: { params: Promise<{ id: stri
   });
 
   useEffect(() => {
+    if (!id) return;
+    
     fetch(`/api/projects/${id}`)
       .then(res => res.json())
       .then(data => {

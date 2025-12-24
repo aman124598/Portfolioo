@@ -1,9 +1,13 @@
-import { getProjects } from '@/lib/data';
+import { getProjectsAsync } from '@/lib/data';
 import Link from 'next/link';
 import DeleteButton from '@/components/DeleteButton';
 
-export default function ProjectsPage() {
-  const projects = getProjects();
+// Force dynamic rendering to always fetch fresh data
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export default async function ProjectsPage() {
+  const projects = await getProjectsAsync();
 
   return (
     <div>
@@ -93,3 +97,4 @@ export default function ProjectsPage() {
     </div>
   );
 }
+

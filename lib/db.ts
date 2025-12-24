@@ -150,7 +150,7 @@ export async function updateProject(id: string, data: Partial<Omit<Project, 'id'
 
 export async function deleteProject(id: string): Promise<boolean> {
   const { rowCount } = await sql`DELETE FROM projects WHERE id = ${id}`;
-  return rowCount > 0;
+  return (rowCount ?? 0) > 0;
 }
 
 // Blogs CRUD
@@ -203,7 +203,16 @@ export async function updateBlog(id: string, data: Partial<Omit<Blog, 'id' | 'cr
 
 export async function deleteBlog(id: string): Promise<boolean> {
   const { rowCount } = await sql`DELETE FROM blogs WHERE id = ${id}`;
-  return rowCount > 0;
+  return (rowCount ?? 0) > 0;
+}
+
+export async function getBlogById(id: string): Promise<Blog | null> {
+  const { rows } = await sql`SELECT * FROM blogs WHERE id = ${id} LIMIT 1`;
+  return rows[0] ? {
+    ...rows[0],
+    createdAt: rows[0].createdat?.toISOString() || new Date().toISOString(),
+    updatedAt: rows[0].updatedat?.toISOString() || new Date().toISOString(),
+  } as Blog : null;
 }
 
 export async function getBlogBySlug(slug: string): Promise<Blog | null> {
@@ -268,5 +277,5 @@ export async function updateExperience(id: string, data: Partial<Omit<Experience
 
 export async function deleteExperience(id: string): Promise<boolean> {
   const { rowCount } = await sql`DELETE FROM experiences WHERE id = ${id}`;
-  return rowCount > 0;
+  return (rowCount ?? 0) > 0;
 }

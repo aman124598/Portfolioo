@@ -8,7 +8,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const blog = getBlogById(id);
+    const blog = await getBlogById(id);
     if (!blog) {
       return NextResponse.json({ error: "Blog not found" }, { status: 404 });
     }
@@ -33,7 +33,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const data = await request.json();
-    const blog = updateBlog(id, data);
+    const blog = await updateBlog(id, data);
     if (!blog) {
       return NextResponse.json({ error: "Blog not found" }, { status: 404 });
     }
@@ -57,7 +57,7 @@ export async function DELETE(
 
   try {
     const { id } = await params;
-    const success = deleteBlog(id);
+    const success = await deleteBlog(id);
     if (!success) {
       return NextResponse.json({ error: "Blog not found" }, { status: 404 });
     }
