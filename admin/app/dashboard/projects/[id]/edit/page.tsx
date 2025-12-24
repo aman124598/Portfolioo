@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface ProjectFormData {
@@ -13,7 +13,8 @@ interface ProjectFormData {
   featured: boolean;
 }
 
-export default function EditProjectPage({ params }: { params: { id: string } }) {
+export default function EditProjectPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -28,7 +29,7 @@ export default function EditProjectPage({ params }: { params: { id: string } }) 
   });
 
   useEffect(() => {
-    fetch(`/api/projects/${params.id}`)
+    fetch(`/api/projects/${id}`)
       .then(res => res.json())
       .then(data => {
         setFormData({
@@ -46,14 +47,14 @@ export default function EditProjectPage({ params }: { params: { id: string } }) 
         alert('Failed to load project');
         router.push('/dashboard/projects');
       });
-  }, [params.id, router]);
+  }, [id, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const res = await fetch(`/api/projects/${params.id}`, {
+      const res = await fetch(`/api/projects/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

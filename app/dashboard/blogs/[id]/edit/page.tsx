@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface BlogFormData {
@@ -14,7 +14,8 @@ interface BlogFormData {
   published: boolean;
 }
 
-export default function EditBlogPage({ params }: { params: { id: string } }) {
+export default function EditBlogPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -30,7 +31,7 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
   });
 
   useEffect(() => {
-    fetch(`/api/blogs/${params.id}`)
+    fetch(`/api/blogs/${id}`)
       .then(res => res.json())
       .then(data => {
         setFormData({
@@ -49,14 +50,14 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
         alert('Failed to load blog post');
         router.push('/dashboard/blogs');
       });
-  }, [params.id, router]);
+  }, [id, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const res = await fetch(`/api/blogs/${params.id}`, {
+      const res = await fetch(`/api/blogs/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

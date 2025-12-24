@@ -4,11 +4,12 @@ import { getProjects, updateProject, deleteProject } from '@/lib/db';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const projects = await getProjects();
-    const project = projects.find(p => p.id === params.id);
+    const project = projects.find(p => p.id === id);
     if (!project) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
@@ -24,7 +25,7 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const user = await getAuthUser();
   if (!user) {
@@ -32,8 +33,9 @@ export async function PUT(
   }
 
   try {
+    const { id } = await params;
     const data = await request.json();
-    const project = await updateProject(params.id, data);
+    const project = await updateProject(id, data);
     if (!project) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
@@ -49,7 +51,7 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const user = await getAuthUser();
   if (!user) {
@@ -57,7 +59,8 @@ export async function DELETE(
   }
 
   try {
-    const success = await deleteProject(params.id);
+    const { id } = await params;
+    const success = await deleteProject(id);
     if (!success) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
@@ -70,3 +73,4 @@ export async function DELETE(
     );
   }
 }
+

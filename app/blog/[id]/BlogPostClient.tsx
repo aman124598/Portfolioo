@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import Link from "next/link"
 import { ArrowLeft, Clock, Calendar, User, Tag, Share2, BookOpen } from "lucide-react"
 import { motion } from "framer-motion"
+import React from "react"
 
 interface BlogPostClientProps {
   blog: Blog
@@ -30,6 +31,31 @@ export default function BlogPostClient({ blog, relatedPosts }: BlogPostClientPro
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
+    })
+  }
+
+  // Parse content and convert URLs to clickable links
+  const renderContentWithLinks = (content: string) => {
+    // URL regex pattern
+    const urlPattern = /(https?:\/\/[^\s<>"{}|\\^`[\]]+)/g
+    
+    const parts = content.split(urlPattern)
+    
+    return parts.map((part, index) => {
+      if (part.match(urlPattern)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2 break-all transition-colors"
+          >
+            {part}
+          </a>
+        )
+      }
+      return <React.Fragment key={index}>{part}</React.Fragment>
     })
   }
 
@@ -127,7 +153,7 @@ export default function BlogPostClient({ blog, relatedPosts }: BlogPostClientPro
             {/* Content */}
             <div className="prose prose-lg dark:prose-invert max-w-none mb-16">
               <div className="text-lg leading-relaxed text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
-                {blog.content}
+                {renderContentWithLinks(blog.content)}
               </div>
             </div>
 

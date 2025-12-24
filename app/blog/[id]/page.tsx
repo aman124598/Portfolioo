@@ -14,8 +14,9 @@ export async function generateStaticParams() {
   }))
 }
 
-export default async function BlogPostPage({ params }: { params: { id: string } }) {
-  const blog = await getBlogBySlug(params.id)
+export default async function BlogPostPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const blog = await getBlogBySlug(id)
 
   if (!blog) {
     notFound()
@@ -29,3 +30,4 @@ export default async function BlogPostPage({ params }: { params: { id: string } 
 
   return <BlogPostClient blog={blog} relatedPosts={relatedPosts} />
 }
+
