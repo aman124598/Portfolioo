@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
-import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Portfolio Admin Panel",
   description: "Manage your portfolio projects and blog posts",
 };
 
-export default function RootLayout({
+export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
+    <div className="min-h-screen bg-gray-900 text-white">
+      {children}
+    </div>
   );
 }
+

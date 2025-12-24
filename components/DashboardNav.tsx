@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { LayoutDashboard, FileText, Briefcase, FolderOpen, LogOut } from 'lucide-react';
+import { LayoutDashboard, FileText, Briefcase, FolderOpen, LogOut, Home } from 'lucide-react';
 
 export function DashboardNav() {
   const router = useRouter();
@@ -22,10 +22,19 @@ export function DashboardNav() {
   ];
 
   return (
-    <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+    <header className="bg-gray-800 border-b border-gray-700">
       <div className="px-8 py-4">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white">Portfolio Admin</h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-xl font-bold text-white">Portfolio Admin</h1>
+            <Link 
+              href="/"
+              className="flex items-center gap-1 text-sm text-gray-400 hover:text-white transition-colors"
+            >
+              <Home className="h-4 w-4" />
+              View Site
+            </Link>
+          </div>
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm transition-colors"
@@ -38,7 +47,7 @@ export function DashboardNav() {
         <nav className="flex gap-2">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.href;
+            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
             
             return (
               <Link
@@ -46,8 +55,8 @@ export function DashboardNav() {
                 href={item.href}
                 className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    ? 'bg-indigo-600 text-white'
+                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                 }`}
               >
                 <Icon className="h-4 w-4" />
@@ -60,3 +69,4 @@ export function DashboardNav() {
     </header>
   );
 }
+
