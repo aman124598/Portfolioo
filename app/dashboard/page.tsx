@@ -4,10 +4,6 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 
-// Force dynamic rendering to always fetch fresh data
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
 export default async function DashboardPage() {
   const projects = await getProjects();
   const blogs = await getBlogs();
@@ -19,7 +15,7 @@ export default async function DashboardPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -30,11 +26,11 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-white">Recent Projects</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Recent Projects</h2>
             <Link href="/dashboard/projects/new">
-              <Button size="sm" variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white">
+              <Button size="sm" variant="outline">
                 <Plus className="h-4 w-4 mr-1" />
                 Add
               </Button>
@@ -45,7 +41,7 @@ export default async function DashboardPage() {
           ) : (
             <ul className="space-y-3">
               {projects.slice(0, 5).map((project) => (
-                <li key={project.id} className="text-gray-300">
+                <li key={project.id} className="text-gray-600 dark:text-gray-300">
                   <div className="flex justify-between items-center">
                     <span className="truncate">{project.title}</span>
                     <span className="text-xs text-gray-500">
@@ -58,11 +54,11 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-white">Recent Blogs</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Recent Blogs</h2>
             <Link href="/dashboard/blogs/new">
-              <Button size="sm" variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white">
+              <Button size="sm" variant="outline">
                 <Plus className="h-4 w-4 mr-1" />
                 Add
               </Button>
@@ -73,7 +69,7 @@ export default async function DashboardPage() {
           ) : (
             <ul className="space-y-3">
               {blogs.slice(0, 5).map((blog) => (
-                <li key={blog.id} className="text-gray-300">
+                <li key={blog.id} className="text-gray-600 dark:text-gray-300">
                   <div className="flex justify-between items-center">
                     <span className="truncate">{blog.title}</span>
                     <span className="text-xs text-gray-500">
@@ -86,11 +82,11 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-white">Experiences</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Experiences</h2>
             <Link href="/dashboard/experiences">
-              <Button size="sm" variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white">
+              <Button size="sm" variant="outline">
                 <Plus className="h-4 w-4 mr-1" />
                 Add
               </Button>
@@ -101,14 +97,14 @@ export default async function DashboardPage() {
           ) : (
             <ul className="space-y-3">
               {experiences.slice(0, 5).map((exp) => (
-                <li key={exp.id} className="text-gray-300">
+                <li key={exp.id} className="text-gray-600 dark:text-gray-300">
                   <div className="flex justify-between items-start">
                     <div className="flex-1 min-w-0">
                       <span className="truncate block font-medium">{exp.title}</span>
                       <span className="text-xs text-gray-500 truncate block">{exp.company}</span>
                     </div>
                     {exp.current && (
-                      <span className="text-xs bg-green-900 text-green-200 px-2 py-1 rounded ml-2 flex-shrink-0">
+                      <span className="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded ml-2 flex-shrink-0">
                         Current
                       </span>
                     )}
@@ -122,4 +118,3 @@ export default async function DashboardPage() {
     </div>
   );
 }
-

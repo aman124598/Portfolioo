@@ -4,11 +4,10 @@ import { getBlogById, updateBlog, deleteBlog } from '@/lib/db';
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await params;
-    const blog = await getBlogById(id);
+    const blog = await getBlogById(params.id);
     if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
@@ -23,7 +22,7 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   const user = await getAuthUser();
   if (!user) {
@@ -31,9 +30,8 @@ export async function PUT(
   }
 
   try {
-    const { id } = await params;
     const data = await request.json();
-    const blog = await updateBlog(id, data);
+    const blog = await updateBlog(params.id, data);
     if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
@@ -48,7 +46,7 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   const user = await getAuthUser();
   if (!user) {
@@ -56,8 +54,7 @@ export async function DELETE(
   }
 
   try {
-    const { id } = await params;
-    const success = await deleteBlog(id);
+    const success = await deleteBlog(params.id);
     if (!success) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
@@ -69,4 +66,3 @@ export async function DELETE(
     );
   }
 }
-
