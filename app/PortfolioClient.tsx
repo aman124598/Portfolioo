@@ -25,11 +25,41 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect"
 import { Button as MovingButton } from "@/components/ui/moving-border"
-import { SparklesCore } from "@/components/ui/sparkles"
 import { TracingBeam } from "@/components/ui/tracing-beam"
 import { Navbar } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import Link from "next/link"
+import dynamic from "next/dynamic"
+
+// Dynamic imports for Three.js components (client-side only)
+const ParticleNetwork = dynamic(
+  () => import("@/components/ui/particle-network").then((mod) => mod.ParticleNetwork),
+  { ssr: false }
+)
+const Globe3D = dynamic(
+  () => import("@/components/ui/globe-3d").then((mod) => mod.Globe3D),
+  { ssr: false }
+)
+const FloatingSkills = dynamic(
+  () => import("@/components/ui/floating-skills").then((mod) => mod.FloatingSkills),
+  { ssr: false }
+)
+const MorphingBlob = dynamic(
+  () => import("@/components/ui/morphing-blob").then((mod) => mod.MorphingBlob),
+  { ssr: false }
+)
+const FloatingIcons = dynamic(
+  () => import("@/components/ui/floating-icons").then((mod) => mod.FloatingIcons),
+  { ssr: false }
+)
+const AnimatedTimeline = dynamic(
+  () => import("@/components/ui/animated-timeline").then((mod) => mod.AnimatedTimeline),
+  { ssr: false }
+)
+const TiltCard = dynamic(
+  () => import("@/components/ui/tilt-card").then((mod) => mod.TiltCard),
+  { ssr: false }
+)
 
 interface ProjectProps {
   title: string;
@@ -122,19 +152,19 @@ export default function PortfolioClient({ projects, experiences }: { projects: P
 
       {/* Hero Section */}
       <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white dark:bg-black">
-        <div className="absolute inset-0 w-full h-full bg-white dark:bg-black bg-grid-black/[0.2] dark:bg-grid-white/[0.2]">
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 w-full h-full bg-white dark:bg-black bg-grid-black/[0.05] dark:bg-grid-white/[0.05]">
             <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
         </div>
+        
+        {/* 3D Particle Network Background */}
         <div className="absolute inset-0 w-full h-full">
-          <SparklesCore
-            id="tsparticlesfullpage"
-            background="transparent"
-            minSize={1}
-            maxSize={3}
-            particleDensity={50}
-            className="w-full h-full"
-            particleColor="#888888"
-            speed={2}
+          <ParticleNetwork
+            count={120}
+            color="#3b82f6"
+            darkColor="#60a5fa"
+            speed={0.4}
+            connectionDistance={150}
           />
         </div>
         
@@ -205,14 +235,16 @@ export default function PortfolioClient({ projects, experiences }: { projects: P
                 viewport={{ once: true }}
                 className="text-center md:text-left"
               >
-                <div className="w-64 h-64 mx-auto md:mx-0 mb-8 rounded-full overflow-hidden bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 p-1">
-                  <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-gray-800">
-                    <img
-                      src="/profile.png"
-                      alt="AMAN"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                {/* 3D Globe with Bangalore Location */}
+                <div className="w-72 h-72 md:w-80 md:h-80 mx-auto md:mx-0 mb-8 relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-indigo-500/10 rounded-full blur-3xl" />
+                  <Globe3D
+                    markerLat={12.9716}
+                    markerLng={77.5946}
+                    markerLabel="Bangalore, India"
+                    autoRotate={true}
+                    rotateSpeed={0.4}
+                  />
                 </div>
               </motion.div>
 
@@ -258,8 +290,19 @@ export default function PortfolioClient({ projects, experiences }: { projects: P
         </section>
 
         {/* Skills Section */}
-        <section id="skills" className="py-20 bg-gray-50 dark:bg-gray-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="skills" className="relative py-20 bg-gray-50 dark:bg-gray-800 overflow-hidden">
+          {/* 3D Floating Skills Background */}
+          <div className="absolute inset-0 opacity-30">
+            <FloatingSkills 
+              skills={[
+                ...skillCategories.Programming,
+                ...skillCategories["Frameworks & Tools"],
+                ...skillCategories.Cybersecurity
+              ]}
+            />
+          </div>
+          
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -277,12 +320,13 @@ export default function PortfolioClient({ projects, experiences }: { projects: P
               {Object.entries(skillCategories).map(([category, skills], index) => (
                 <motion.div
                   key={category}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <Card className="h-full hover:shadow-lg transition-shadow duration-300">
+                  <Card className="h-full backdrop-blur-sm bg-white/80 dark:bg-gray-900/80 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 border-gray-200/50 dark:border-gray-700/50">
                     <CardContent className="p-6">
                       <div className="flex items-center gap-2 mb-4">
                         {category === "Programming" && <Code className="h-5 w-5 text-blue-600" />}
@@ -293,14 +337,26 @@ export default function PortfolioClient({ projects, experiences }: { projects: P
                         <h3 className="font-semibold text-lg">{category}</h3>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {skills.map((skill) => (
-                          <Badge
+                        {skills.map((skill, skillIndex) => (
+                          <motion.div
                             key={skill}
-                            variant="secondary"
-                            className="text-sm hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors"
+                            initial={{ opacity: 0, scale: 0 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ 
+                              duration: 0.3, 
+                              delay: index * 0.1 + skillIndex * 0.05,
+                              type: "spring",
+                              stiffness: 200
+                            }}
+                            viewport={{ once: true }}
                           >
-                            {skill}
-                          </Badge>
+                            <Badge
+                              variant="secondary"
+                              className="text-sm hover:bg-blue-100 dark:hover:bg-blue-900 hover:scale-110 transition-all duration-200 cursor-default"
+                            >
+                              {skill}
+                            </Badge>
+                          </motion.div>
                         ))}
                       </div>
                     </CardContent>
@@ -457,8 +513,13 @@ export default function PortfolioClient({ projects, experiences }: { projects: P
         </section>
 
         {/* Experience Section */}
-        <section id="experience" className="py-20 bg-gray-50 dark:bg-gray-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="experience" className="relative py-20 bg-gray-50 dark:bg-gray-800 overflow-hidden">
+          {/* 3D Animated Timeline Background */}
+          <div className="absolute inset-0 opacity-20">
+            <AnimatedTimeline itemCount={experiences.length} />
+          </div>
+          
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -483,49 +544,62 @@ export default function PortfolioClient({ projects, experiences }: { projects: P
                 return (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.15 }}
                     viewport={{ once: true }}
                   >
-                    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                      <CardContent className="p-8">
-                        <div className="flex items-start gap-4">
-                          <div className="flex-shrink-0">
-                            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
-                              <Shield className="h-6 w-6 text-white" />
-                            </div>
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-3">
-                              <h3 className="font-semibold text-xl text-gray-900 dark:text-white">{experience.title}</h3>
-                              <Badge variant={experience.current ? "default" : "secondary"} className="w-fit">
-                                {formatDate(experience.startDate)} – {experience.current ? "Present" : formatDate(experience.endDate)}
-                              </Badge>
-                            </div>
-                            <p className="text-blue-600 dark:text-blue-400 font-medium mb-1">
-                              {experience.company}
-                            </p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-                              {experience.location}
-                            </p>
-                            {experience.description && (
-                              <p className="text-gray-600 dark:text-gray-300 mb-3">
-                                {experience.description}
+                    <TiltCard className="w-full" tiltAmount={5} glareEnabled={true}>
+                      <Card className="overflow-hidden backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300">
+                        <CardContent className="p-8">
+                          <div className="flex items-start gap-4">
+                            <motion.div 
+                              className="flex-shrink-0"
+                              whileHover={{ scale: 1.1, rotate: 5 }}
+                              transition={{ type: "spring", stiffness: 300 }}
+                            >
+                              <div className="w-14 h-14 bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
+                                <Shield className="h-7 w-7 text-white" />
+                              </div>
+                            </motion.div>
+                            <div className="flex-1">
+                              <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-3">
+                                <h3 className="font-semibold text-xl text-gray-900 dark:text-white">{experience.title}</h3>
+                                <Badge variant={experience.current ? "default" : "secondary"} className="w-fit mt-2 md:mt-0">
+                                  {formatDate(experience.startDate)} – {experience.current ? "Present" : formatDate(experience.endDate)}
+                                </Badge>
+                              </div>
+                              <p className="text-blue-600 dark:text-blue-400 font-medium mb-1">
+                                {experience.company}
                               </p>
-                            )}
-                            <div className="space-y-2 text-gray-600 dark:text-gray-300">
-                              {experience.responsibilities.map((resp, idx) => (
-                                <p key={idx} className="flex items-start gap-2">
-                                  <span className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
-                                  {resp}
+                              <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                                {experience.location}
+                              </p>
+                              {experience.description && (
+                                <p className="text-gray-600 dark:text-gray-300 mb-3">
+                                  {experience.description}
                                 </p>
-                              ))}
+                              )}
+                              <div className="space-y-2 text-gray-600 dark:text-gray-300">
+                                {experience.responsibilities.map((resp, idx) => (
+                                  <motion.p 
+                                    key={idx} 
+                                    className="flex items-start gap-2"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.4, delay: index * 0.1 + idx * 0.1 }}
+                                    viewport={{ once: true }}
+                                  >
+                                    <span className="w-2 h-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mt-2 flex-shrink-0"></span>
+                                    {resp}
+                                  </motion.p>
+                                ))}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
+                    </TiltCard>
                   </motion.div>
                 )
               })}
@@ -556,8 +630,13 @@ export default function PortfolioClient({ projects, experiences }: { projects: P
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-20 bg-gray-50 dark:bg-gray-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="contact" className="relative py-20 bg-gray-50 dark:bg-gray-800 overflow-hidden">
+          {/* 3D Floating Icons Background */}
+          <div className="absolute inset-0 opacity-40">
+            <FloatingIcons />
+          </div>
+          
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -586,39 +665,63 @@ export default function PortfolioClient({ projects, experiences }: { projects: P
                   </p>
 
                   <div className="space-y-4">
-                    <a
+                    <motion.a
                       href="https://x.com/Stranzerzz"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
+                      className="flex items-center gap-4 p-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-xl hover:bg-white dark:hover:bg-gray-800 transition-all group border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl"
+                      whileHover={{ scale: 1.02, x: 5 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/40 transition-colors">
-                        <Twitter className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                        <Twitter className="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <p className="font-medium">Twitter</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">Follow me</p>
+                        <p className="font-semibold text-lg">Twitter</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">Follow me @Stranzerzz</p>
                       </div>
-                    </a>
+                    </motion.a>
 
-                    <a
+                    <motion.a
                       href="https://www.linkedin.com/in/aman-83169b204/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
+                      className="flex items-center gap-4 p-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-xl hover:bg-white dark:hover:bg-gray-800 transition-all group border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl"
+                      whileHover={{ scale: 1.02, x: 5 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/40 transition-colors">
-                        <Linkedin className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                        <Linkedin className="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <p className="font-medium">LinkedIn</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">Connect with me</p>
+                        <p className="font-semibold text-lg">LinkedIn</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">Connect professionally</p>
                       </div>
-                    </a>
+                    </motion.a>
+                    
+                    <motion.a
+                      href="https://github.com/aman124598"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-4 p-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-xl hover:bg-white dark:hover:bg-gray-800 transition-all group border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl"
+                      whileHover={{ scale: 1.02, x: 5 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <div className="w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-900 dark:from-gray-200 dark:to-gray-400 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                        <Github className="h-6 w-6 text-white dark:text-gray-900" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-lg">GitHub</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">Check out my code</p>
+                      </div>
+                    </motion.a>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-6 rounded-lg">
+                <motion.div 
+                  className="bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-cyan-500/10 p-6 rounded-2xl backdrop-blur-sm border border-blue-200/30 dark:border-blue-700/30"
+                  whileHover={{ scale: 1.02 }}
+                >
                   <h4 className="font-semibold mb-2 flex items-center gap-2">
                     <MessageCircle className="h-5 w-5 text-blue-600" />
                     Quick Response
@@ -627,7 +730,7 @@ export default function PortfolioClient({ projects, experiences }: { projects: P
                     For urgent matters or collaboration opportunities,
                     feel free to reach out on LinkedIn or Twitter.
                   </p>
-                </div>
+                </motion.div>
               </motion.div>
             </div>
           </div>
